@@ -13,8 +13,40 @@
 j1Player::j1Player() : j1Module()
 {
 	name.create("player");
+	//little mario
+	//sprite_idle = { 277,44,12,16 };
 
-	
+	sprite_idle.PushBack( { 258,1,16,32 });
+
+	//Walk right
+	move_right.PushBack({ 296,3,16,30 });
+	move_right.PushBack({ 315,2,14,31 });
+	move_right.PushBack({ 331,1,16,32 });
+	move_right.speed = ANIMATION_SPEED;
+	/*Litlle Mario
+	move_right.PushBack({54,181,27,32});
+	move_right.PushBack({ 93,181,27,32 });
+	move_right.PushBack({ 11,220,27,32 });
+	move_right.PushBack({ 54,218,27,32 });
+	move_right.PushBack({ 91,219,27,32 });
+	*/
+
+	//Walk left
+	//SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL;
+
+	//SDL_RenderCopyEx(renderer, texture, &srcrect, &dstrect, angle, &center, flip);
+
+	//Jump 
+	jump.PushBack({369,2,16,32});
+
+	//little mario
+	//jump = { 126,220,34,32 };
+
+	//Die 
+	die.PushBack({ 277, 11, 16, 22 });
+
+	//Litlle mario
+	//die = { 127,263,32,28 };
 }
 
 // Destructor
@@ -27,7 +59,7 @@ bool j1Player::Awake(pugi::xml_node& node)
 	LOG("Loading Player");
 	bool ret = true;
 
-	position.create(96, 64);
+	position.create(86, 174);
 
 	return ret;
 }
@@ -35,7 +67,7 @@ bool j1Player::Awake(pugi::xml_node& node)
 // Called before the first frame
 bool j1Player::Start()
 {
-	text_player = App->tex->Load("textures/mario_sprite.png");
+	text_player = App->tex->Load("textures/characters.png");
 
 	return true;
 }
@@ -49,7 +81,37 @@ bool j1Player::PreUpdate()
 // Called each loop iteration
 bool j1Player::Update(float dt)
 {
+	
+
+	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
+	{
+		position.x -= VELOCITY;
+		App->render->camera.x -= VELOCITY;
+		stage = LEFT;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
+	{
+		position.x += VELOCITY;
+		App->render->camera.x += -;
+		stage = RIGHT;
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	{
+		position.y -= VELOCITY;
+		stage = JUMP;
+
+		//max jump (if)
+	}
+
+	/*if ((App->input->GetKey(SDL_SCANCODE_SPACE) == NULL))
+	{
+		stage = IDLE;
+	}
+	*/
 	Draw();
+	App->render->Blit(text_player, position.x, position.y, &(sprite->GetCurrentFrame()));
 	return true;
 }
 
@@ -76,8 +138,34 @@ bool j1Player::Load(pugi::xml_node &)
 }
 void j1Player::Draw()
 {
+	switch (stage)
+	{
+		case j1Player::IDLE:
+		{
+			sprite = &sprite_idle;
+			break;
+		}
+		case j1Player::RIGHT: 
+		{
+			sprite = &move_right;
+			break;
+		}
+		
+		case j1Player::LEFT:
+		{
+			sprite = &move_left;
+			break;
+		}
+		case j1Player::JUMP:
+		{
+			sprite = &jump;
+			break;
+		}
+		default:
 
-	App->render->Blit(text_player, position.x, position.y, sprite_pos);
+			break;
+	}
+	
 }
 
 // Called before quitting

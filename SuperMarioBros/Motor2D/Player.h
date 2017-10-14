@@ -6,14 +6,17 @@
 #include "p2Point.h"
 #include "j1Module.h"
 #include "p2List.h"
+#include "Animation.h"
+
+#define VELOCITY  0.65f
+#define ANIMATION_SPEED 0.045f;
 
 struct SDL_Texture;
-
 
 class j1Player : public j1Module
 {
 public:
-	enum mario {IDLE, RIGHT,LEFT,JUMP};
+	enum mario_stage {IDLE, RIGHT,LEFT,JUMP};
 
 	j1Player();
 
@@ -46,7 +49,15 @@ private:
 	SDL_Texture* text_player = nullptr;
 	fPoint position;
 	SDL_Rect* sprite_pos;
-	p2List<j1Player> animation;
+	Animation sprite_idle;
+	Animation jump;
+	Animation die;
+	Animation move_right;
+	Animation move_left;
+	Animation* sprite;
+	mario_stage stage;
+
+	
 
 public:
 
