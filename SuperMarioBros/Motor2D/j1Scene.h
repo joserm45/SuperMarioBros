@@ -33,6 +33,7 @@ public:
 	bool CleanUp();
 
 private:
+	iPoint position;
 };
 
 #endif // __j1SCENE_H__

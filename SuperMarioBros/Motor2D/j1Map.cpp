@@ -31,7 +31,7 @@ void j1Map::Draw()
 	if(map_loaded == false)
 		return;
 
-	// TODO 5: Prepare the loop to draw all tilesets + Blit
+	
 	//p2List_item<TileSet*>* tile_data = map_data.tilesets.start;
 	p2List_item<Layer*>* layer_data = map_data.layers.start;
 
@@ -43,12 +43,13 @@ void j1Map::Draw()
 			{
 				uint tile_id = layer_data->data->Get(x, y);
 				iPoint position = MapToWorld(x, y);
-				App->render->Blit(map_data.tilesets[0]->texture, position.x, position.y, &map_data.tilesets[0]->GetTileRect(tile_id));
+				for(uint i=0; i<map_data.tilesets.count();i++)
+				App->render->Blit(map_data.tilesets[i]->texture, position.x, position.y, &map_data.tilesets[0]->GetTileRect(tile_id));
 			}
 		}
 		layer_data = layer_data->next;
 	}
-		// TODO 9: Complete the draw function
+		
 
 }
 
@@ -90,7 +91,7 @@ bool j1Map::CleanUp()
 	}
 	map_data.tilesets.clear();
 
-	// TODO 2: clean up all layer data
+	
 	// Remove all layers
 	
 	map_data.layers.clear();
@@ -140,8 +141,7 @@ bool j1Map::Load(const char* file_name)
 		map_data.tilesets.add(set);
 	}
 
-	// TODO 4: Iterate all layers and load each of them
-	// Load layer info ----------------------------------------------
+		// Load layer info ----------------------------------------------
 	
 	
 	pugi::xml_node root_node = map_file.child("map");
@@ -169,8 +169,7 @@ bool j1Map::Load(const char* file_name)
 			item = item->next;
 		}
 
-		// TODO 4: Add info here about your loaded layers
-		// Adapt this vcode with your own variables
+			// Adapt this vcode with your own variables
 		
 		p2List_item<Layer*>* item_layer = map_data.layers.start;
 		while(item_layer != NULL)
@@ -188,6 +187,11 @@ bool j1Map::Load(const char* file_name)
 	return ret;
 }
 
+void j1Map::MapPositionPlayer()
+{
+	pugi::xml_node node_pos;
+	///node_pos = map_file.child("tilset").child("tile").child("properties").child("property");
+}
 // Load map general properties
 bool j1Map::LoadMap()
 {
@@ -315,7 +319,7 @@ bool j1Map::LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set)
 	return ret;
 }
 
-// TODO 3: Create the definition for a function that loads a single layer
+
 Layer* j1Map::LoadLayer(pugi::xml_node& node)
 {
 	Layer* layer = new Layer();

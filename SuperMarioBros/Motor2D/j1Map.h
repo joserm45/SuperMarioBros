@@ -6,7 +6,7 @@
 #include "p2Point.h"
 #include "j1Module.h"
 
-// TODO 1: Create a struct for the map layer
+
 // ----------------------------------------------------
 struct Layer
 {
@@ -33,14 +33,14 @@ struct Layer
 		RELEASE_ARRAY(tiles);
 	};
 };
-	// TODO 6: Short function to get the value of x,y
+
 
 
 
 // ----------------------------------------------------
 struct TileSet
 {
-	// TODO 7: Create a method that receives a tile id and returns it's Rectfind the Rect associated with a specific tile id
+	
 	SDL_Rect GetTileRect(int id) const;
 
 	p2SString			name;
@@ -76,7 +76,7 @@ struct MapData
 	MapTypes			type;
 	p2List<TileSet*>	tilesets;
 	p2List<Layer*>		layers;
-	// TODO 2: Add a list/array of layers to the map!
+
 };
 
 // ----------------------------------------------------
@@ -101,7 +101,7 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-	// TODO 8: Create a method that translates x,y coordinates from map positions to world positions
+
 	iPoint MapToWorld(int x, int y) const;
 
 private:
@@ -109,7 +109,8 @@ private:
 	bool LoadMap();
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
-	// TODO 3: Create a method that loads a single laye
+	void MapPositionPlayer();
+
 	Layer* LoadLayer(pugi::xml_node& node);
 
 
