@@ -5,6 +5,7 @@
 #include "p2List.h"
 #include "p2Point.h"
 #include "j1Module.h"
+#include "p2DynArray.h"
 
 
 // ----------------------------------------------------
@@ -16,6 +17,8 @@ struct Layer
 	uint height = 0;
 	uint* tiles = nullptr;
 	uint size_tiles = 0;
+	bool iscollision = false;
+	float parallax_speed = 0;
 
 	inline uint Get(uint x, uint y) const
 	{
@@ -35,14 +38,19 @@ struct Layer
 };
 
 
+struct Tile
+{
+	uint gid = 0;
+	bool iscollision = false;
 
+};
 
 // ----------------------------------------------------
 struct TileSet
 {
 	
 	SDL_Rect GetTileRect(int id) const;
-
+	//Tilset();
 	p2SString			name;
 	int					firstgid;
 	int					margin;
@@ -56,6 +64,14 @@ struct TileSet
 	int					num_tiles_height;
 	int					offset_x;
 	int					offset_y;
+	p2DynArray<Tile>	tile_data;
+	//uint				tile_count;
+	bool GetTileCollision(uint gid)const;
+	~TileSet()
+	{
+		SDL_DestroyTexture(texture);
+		//RELEASE_ARRAY(tile_data);
+	}
 };
 
 enum MapTypes
@@ -101,16 +117,19 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
+	void Clear();
 
 	iPoint MapToWorld(int x, int y) const;
+	iPoint WorldToMap(int x, int y)const;
 
+	Layer* GetCollisionLayer()const;
 private:
 
 	bool LoadMap();
 	bool LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set);
 	bool LoadTilesetImage(pugi::xml_node& tileset_node, TileSet* set);
 	void MapPositionPlayer();
-
+	
 	Layer* LoadLayer(pugi::xml_node& node);
 
 

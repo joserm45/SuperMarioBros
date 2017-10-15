@@ -2,8 +2,67 @@
 <map version="1.0" orientation="orthogonal" renderorder="right-down" width="226" height="15" tilewidth="16" tileheight="16" nextobjectid="1">
  <tileset firstgid="1" name="tile_mario2" tilewidth="16" tileheight="16" tilecount="812" columns="29">
   <image source="tile_mario2.png" width="464" height="448"/>
+  <tile id="0">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="1">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="29">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="232">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="233">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="234">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="235">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="261">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="262">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="263">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
+  <tile id="264">
+   <properties>
+    <property name="Colider" type="bool" value="true"/>
+   </properties>
+  </tile>
  </tileset>
  <layer name="Capa de Patrones 1" width="226" height="15">
+  <properties>
+   <property name="Colliders" type="bool" value="true"/>
+   <property name="Parallax" type="float" value="0"/>
+  </properties>
   <data>
    <tile gid="652"/>
    <tile gid="652"/>
@@ -3397,7 +3456,11 @@
    <tile gid="1"/>
   </data>
  </layer>
- <layer name="Parallax_clouds" width="226" height="15" offsetx="250" offsety="0">
+ <layer name="Parallax_clouds" width="226" height="15">
+  <properties>
+   <property name="Colliders" type="bool" value="false"/>
+   <property name="Parallax" type="float" value="0.3"/>
+  </properties>
   <data>
    <tile gid="0"/>
    <tile gid="0"/>

@@ -5,9 +5,11 @@
 	<textures />
 	<audio />
 	<map />
-	<scene />
-	<player />
+	<scene current_lvl="2" />
+	<player>
+		<position x="210" y="174" />
+	</player>
 	<renderer>
-		<camera x="0" y="0" />
+		<camera x="-179" y="0" />
 	</renderer>
 </save>

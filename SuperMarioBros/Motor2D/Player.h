@@ -39,16 +39,18 @@ public:
 	// Called before all Updates
 	bool PostUpdate();
 
+	void CheckCollisions();
 	//Save and Load functions
 	bool Load(pugi::xml_node &);
 	bool Save(pugi::xml_node&)const;
 	void Draw();
+	void MoveCamera();
 	// Called before quitting
 	bool CleanUp();
 
 private:
 	SDL_Texture* text_player = nullptr;
-	fPoint position;
+	
 	SDL_Rect* sprite_pos;
 	Animation sprite_idle;
 	Animation jump;
@@ -57,11 +59,12 @@ private:
 	Animation move_left;
 	Animation* sprite;
 	mario_stage stage;
-
+	float vector_x;
+	float vector_y;
 	
 
 public:
-
+	fPoint position;
 
 };
 

@@ -82,37 +82,47 @@ bool j1Player::PreUpdate()
 // Called each loop iteration
 bool j1Player::Update(float dt)
 {
+	vector_x = 0;
+	vector_y = 0;
 	
+		frame_counter ++;
+	bool moving = false;
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
-		position.x -= VELOCITY;
-		App->render->camera.x -= -0.1f;
+		moving = true;
+		vector_x -= VELOCITY;
 		stage = LEFT;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
-		position.x += VELOCITY;
-		App->render->camera.x += -0.1f;
+		moving = true;
+		vector_x += VELOCITY;
 		stage = RIGHT;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 	{
-		int gravedad = GRAVITY + dt;
-		position.y -= VELOCITY + gravedad;
+		moving = true;
+		position.y -= VELOCITY + GRAVITY;
 		stage = JUMP;
 
 		//max jump (if)
 	}
+	CheckCollisions();
+	position.x += vector_x;
+	position.y += vector_y;
+	MoveCamera();
 
-	/*if ((App->input->GetKey(SDL_SCANCODE_SPACE) == NULL))
+	if (moving == false)
 	{
 		stage = IDLE;
 	}
-	*/
+	
+
 	Draw();
+
 	App->render->Blit(text_player, position.x, position.y, &(sprite->GetCurrentFrame()));
 	return true;
 }
@@ -127,15 +137,47 @@ bool j1Player::PostUpdate()
 	return ret;
 }
 
-bool j1Player::Save(pugi::xml_node&)const
+void j1Player::CheckCollisions()
 {
+	iPoint current_tile = App->map->WorldToMap(position.x, position.y);
+	if (vector_x > 0)
+	{
+		current_tile.x++;
+	}
+	if (vector_x < 0)
+	{
+		current_tile.x--;
+	}
+
+	Layer* collision_layer = App->map->GetCollisionLayer();
+	uint tile_id = collision_layer->Get(current_tile.x, current_tile.y);
+
+	
+	if (App->map->map_data.tilesets[0]->GetTileCollision(tile_id))
+	{
+		vector_x = 0;
+	}
+	tile_id = collision_layer->Get(current_tile.x, current_tile.y+1);
+
+   	if (App->map->map_data.tilesets[0]->GetTileCollision(tile_id))
+	{
+		vector_x = 0;
+	}
+}
+bool j1Player::Save(pugi::xml_node& node)const
+{
+	pugi::xml_node root = node.append_child("position");
+	root.append_attribute("x") = position.x;
+	root.append_attribute("y") = position.y;
 
 	return true;
 }
 
-bool j1Player::Load(pugi::xml_node &)
+bool j1Player::Load(pugi::xml_node &node)
 {
-
+	pugi::xml_node root = node.child("position");
+	position.x = root.attribute("x").as_int();
+	position.y = root.attribute("y").as_int();
 	return true;
 }
 void j1Player::Draw()
@@ -168,6 +210,28 @@ void j1Player::Draw()
 			break;
 	}
 	
+}
+
+void j1Player::MoveCamera()
+{
+	int relative_pos_player = position.x + App->render->camera.x;
+
+	if (relative_pos_player < App->render->border)
+	{
+		App->render->camera.x = - (position.x - App->render->border);
+	}
+	if (relative_pos_player > App->render->camera.w - App->render->border )
+	{
+		App->render->camera.x = -(position.x - (App->render->camera.w - App->render->border));
+	}
+	if (App->render->camera.x > 0)
+	{
+		App->render->camera.x = 0;
+	}
+	if (App->render->camera.x < -2816)
+	{
+		App->render->camera.x = -2816;
+	}
 }
 
 // Called before quitting

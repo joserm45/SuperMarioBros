@@ -4,6 +4,8 @@
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "j1Map.h"
+#include "j1Input.h"
+
 #include <math.h>
 
 j1Map::j1Map() : j1Module(), map_loaded(false)
@@ -44,13 +46,16 @@ void j1Map::Draw()
 				uint tile_id = layer_data->data->Get(x, y);
 				iPoint position = MapToWorld(x, y);
 				for(uint i=0; i<map_data.tilesets.count();i++)
-				App->render->Blit(map_data.tilesets[i]->texture, position.x, position.y, &map_data.tilesets[0]->GetTileRect(tile_id));
+				App->render->Blit(map_data.tilesets[i]->texture, position.x - (App->render->camera.x * layer_data->data->parallax_speed), position.y, &map_data.tilesets[0]->GetTileRect(tile_id));
 			}
 		}
 		layer_data = layer_data->next;
 	}
 		
-
+	/*int x, y;
+	App->input->GetMousePosition(x, y);
+	iPoint tile = WorldToMap(x, y);
+	LOG("Mouse tile pos: x - %i, y - %i", tile.x, tile.y);*/
 }
 
 
@@ -64,6 +69,26 @@ iPoint j1Map::MapToWorld(int x, int y) const
 	return ret;
 }
 
+iPoint j1Map::WorldToMap(int x, int y)const
+{
+	iPoint ret;
+	ret.x = x / map_data.tile_width;
+	ret.y = y / map_data.tile_height;
+	return ret;
+}
+
+Layer* j1Map::GetCollisionLayer()const
+{
+	for (p2List_item<Layer*>* it = map_data.layers.start; it; it = it->next)
+	{
+		if (it->data->iscollision == true)
+		{
+			return it->data;
+		}
+	}
+	return nullptr;		
+}
+
 SDL_Rect TileSet::GetTileRect(int id) const
 {
 	int relative_id = id - firstgid;
@@ -74,30 +99,23 @@ SDL_Rect TileSet::GetTileRect(int id) const
 	rect.y = margin + ((rect.h + spacing) * (relative_id / num_tiles_width));
 	return rect;
 }
-
+bool TileSet::GetTileCollision(uint gid)const
+{
+	int relative_id = gid - firstgid;
+	for (int i = 0; i < tile_data.Count(); i++)
+	{
+		if (tile_data[i].gid == relative_id)
+		{
+ 		return tile_data[i].iscollision;
+		}
+	}
+	return false;
+ }
 // Called before quitting
 bool j1Map::CleanUp()
 {
 	LOG("Unloading map");
-
-	// Remove all tilesets
-	p2List_item<TileSet*>* item;
-	item = map_data.tilesets.start;
-
-	while(item != NULL)
-	{
-		RELEASE(item->data);
-		item = item->next;
-	}
-	map_data.tilesets.clear();
-
-	
-	// Remove all layers
-	
-	map_data.layers.clear();
-
-	// Clean up the pugui tree
-	map_file.reset();
+	Clear();
 
 	return true;
 }
@@ -106,6 +124,8 @@ bool j1Map::CleanUp()
 bool j1Map::Load(const char* file_name)
 {
 	bool ret = true;
+	Clear();
+
 	p2SString tmp("%s%s", folder.GetString(), file_name);
 
 	pugi::xml_parse_result result = map_file.load_file(tmp.GetString());
@@ -185,6 +205,33 @@ bool j1Map::Load(const char* file_name)
 	map_loaded = ret;
 
 	return ret;
+}
+
+void j1Map::Clear()
+{
+	p2List_item<TileSet*>* item;
+	item = map_data.tilesets.start;
+
+	while (item != NULL)
+	{
+		RELEASE(item->data);
+		item = item->next;
+	}
+	map_data.tilesets.clear();
+
+
+	// Remove all layers
+	p2List_item<Layer*>* item2;
+	item2 = map_data.layers.start;
+
+	while (item2 != NULL)
+	{
+		RELEASE(item2->data);
+		item2 = item2->next;
+	}
+	map_data.layers.clear();
+
+	map_file.reset();
 }
 
 void j1Map::MapPositionPlayer()
@@ -268,6 +315,26 @@ bool j1Map::LoadTilesetDetails(pugi::xml_node& tileset_node, TileSet* set)
 	set->margin = tileset_node.attribute("margin").as_int();
 	set->spacing = tileset_node.attribute("spacing").as_int();
 	pugi::xml_node offset = tileset_node.child("tileoffset");
+	
+	int i = 0;
+	for (pugi::xml_node tile_it = tileset_node.child("tile"); tile_it; tile_it = tile_it.next_sibling())
+	{
+		Tile tile;
+
+		tile.gid = tile_it.attribute("id").as_uint();
+
+		for (pugi::xml_node property_it = tile_it.child("properties").child("property"); property_it; property_it = property_it.next_sibling())
+		{
+			p2SString property_name = property_it.attribute("name").as_string();
+			if (property_name == "Colider")
+			{
+				tile.iscollision = property_it.attribute("value").as_bool();
+			}
+			
+		}
+		i++;
+		set->tile_data.PushBack(tile);
+	}
 
 	if(offset != NULL)
 	{
@@ -340,6 +407,22 @@ Layer* j1Map::LoadLayer(pugi::xml_node& node)
 		layer->tiles[i] = tile_iteration.attribute("gid").as_int();
 		tile_iteration = tile_iteration.next_sibling();
 	}
+	// TO parallax and colisions
+
+	for (pugi::xml_node it = node.child("properties").child("property"); it; it = it.next_sibling())
+	{
+		p2SString property_name = it.attribute("name").as_string();
+		if (property_name == "Parallax")
+		{
+			layer->parallax_speed = it.attribute("value").as_float();
+		}
+		if (property_name == "Colliders")
+		{
+			layer->iscollision = it.attribute("value").as_bool();
+		}
+
+	}
+	
 
 	return layer;
 }

@@ -57,19 +57,10 @@
     <property name="Colider" type="bool" value="true"/>
    </properties>
   </tile>
-  <tile id="612">
-   <properties>
-    <property name="Parallax" type="float" value="1"/>
-   </properties>
-  </tile>
-  <tile id="811">
-   <properties>
-    <property name="Spawn_player" type="bool" value="true"/>
-   </properties>
-  </tile>
  </tileset>
  <layer name="layer_map_lvl1" width="226" height="15">
   <properties>
+   <property name="Colliders" type="bool" value="true"/>
    <property name="Parallax" type="float" value="0"/>
   </properties>
   <data>
@@ -3465,9 +3456,10 @@
    <tile gid="1"/>
   </data>
  </layer>
- <layer name="cloud_layer_parallax" width="226" height="15" offsetx="284" offsety="0">
+ <layer name="cloud_layer_parallax" width="226" height="15">
   <properties>
-   <property name="Parallax" type="float" value="1"/>
+   <property name="Colliders" type="bool" value="false"/>
+   <property name="Parallax" type="float" value="0.3"/>
   </properties>
   <data>
    <tile gid="0"/>

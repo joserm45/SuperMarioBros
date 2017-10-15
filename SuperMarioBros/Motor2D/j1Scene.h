@@ -32,8 +32,15 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void LoadLvl(int, bool );
+
+	bool Save(pugi::xml_node&)const;
+
+	bool Load(pugi::xml_node&);
+
 private:
 	iPoint position;
+	int current_lvl;
 };
 
 #endif // __j1SCENE_H__

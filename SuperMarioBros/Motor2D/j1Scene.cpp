@@ -8,6 +8,7 @@
 #include "j1Window.h"
 #include "j1Map.h"
 #include "j1Scene.h"
+#include "Player.h"
 
 j1Scene::j1Scene() : j1Module()
 {
@@ -30,8 +31,8 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	App->audio->PlayMusic("audio/music/lvl_1.ogg");
-	App->map->Load("lvl1.tmx");
+	
+	LoadLvl(1,true);
 
 	return true;
 }
@@ -57,19 +58,20 @@ bool j1Scene::Update(float dt)
 		App->GoLoadAudio();
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
 	{
-		App->audio->path_audio = "audio/music/lvl_1.ogg";
-		App->audio->PlayMusic("audio/music/lvl1.ogg");
-		App->map->Load("lvl2.tmx");
+		LoadLvl(1,true);
 	}
 
 
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		LoadLvl(current_lvl, true);
+	}
+
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
-		App->audio->path_audio = "audio/music/lvl_2.ogg";
-		App->map->Load("lvl2.tmx");
-		App->audio->PlayMusic("audio/music/lvl_2.ogg");
+		LoadLvl(2,true);
 	}
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
@@ -84,7 +86,7 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += -1;
 		
-	//App->render->Blit(img, 0, 0);
+	
 	App->map->Draw();
 
 	// "Map:%dx%d Tiles:%dx%d Tilesets:%d"
@@ -114,5 +116,40 @@ bool j1Scene::CleanUp()
 {
 	LOG("Freeing scene");
 
+	return true;
+}
+void j1Scene::LoadLvl(int current,bool lvl_start)
+{
+	if (lvl_start == true)
+	{
+		App->player->position.x = 86;
+		App->player->position.y = 174;
+		App->render->camera.x = 0;
+		App->render->camera.y = 0;
+	}
+	if (current == 1)
+	{
+		App->audio->PlayMusic("audio/music/lvl_1.ogg");
+		App->map->Load("lvl1.tmx");
+		current_lvl = current;
+	}
+	else if (current == 2)
+	{
+		App->audio->PlayMusic("audio/music/lvl_2.ogg");
+		App->map->Load("lvl2.tmx");
+		current_lvl = current;
+	}
+	
+}
+
+bool j1Scene::Save(pugi::xml_node& node)const
+{
+	node.append_attribute("current_lvl") = current_lvl;
+	return true;
+}
+
+bool j1Scene::Load(pugi::xml_node& node)
+{
+	LoadLvl(node.attribute("current_lvl").as_int(),false);
 	return true;
 }
