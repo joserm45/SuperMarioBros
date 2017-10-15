@@ -60,7 +60,7 @@ bool j1Player::Awake(pugi::xml_node& node)
 	LOG("Loading Player");
 	bool ret = true;
 
-	position.create(86, 174);
+	//position.create(86, 174);
 
 	return ret;
 }
@@ -85,7 +85,6 @@ bool j1Player::Update(float dt)
 	vector_x = 0;
 	vector_y = 0;
 	
-		frame_counter ++;
 	bool moving = false;
 
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
@@ -102,19 +101,37 @@ bool j1Player::Update(float dt)
 		stage = RIGHT;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
 	{
 		moving = true;
-		position.y -= VELOCITY + GRAVITY;
+		jumping = true;
 		stage = JUMP;
+		frame_counter = 0;
 
 		//max jump (if)
 	}
+	if (jumping == true)
+	{
+		vector_y -= VELOCITY * 1.5f;
+		frame_counter++;
+		if (frame_counter > 120)
+		{
+			jumping = false;
+			frame_counter = 0;
+		}
+	}
+
+	vector_y += GRAVITY;
 	CheckCollisions();
 	position.x += vector_x;
 	position.y += vector_y;
 	MoveCamera();
 
+	if (position.y > 240)
+	{
+		App->scene->LoadLvl(App->scene->current_lvl, true);
+	}
+	
 	if (moving == false)
 	{
 		stage = IDLE;
@@ -148,11 +165,9 @@ void j1Player::CheckCollisions()
 	{
 		current_tile.x--;
 	}
-
 	Layer* collision_layer = App->map->GetCollisionLayer();
 	uint tile_id = collision_layer->Get(current_tile.x, current_tile.y);
 
-	
 	if (App->map->map_data.tilesets[0]->GetTileCollision(tile_id))
 	{
 		vector_x = 0;
@@ -163,6 +178,26 @@ void j1Player::CheckCollisions()
 	{
 		vector_x = 0;
 	}
+
+	// Y axis
+	current_tile = App->map->WorldToMap(position.x, position.y);
+	if (vector_y > 0)
+	{
+		current_tile.y = current_tile.y + 2;
+	}
+	if (vector_y < 0)
+	{
+		current_tile.y --;
+	}
+
+	tile_id = collision_layer->Get(current_tile.x, current_tile.y );
+
+	if (App->map->map_data.tilesets[0]->GetTileCollision(tile_id))
+	{
+		vector_y = 0;
+	}
+
+
 }
 bool j1Player::Save(pugi::xml_node& node)const
 {

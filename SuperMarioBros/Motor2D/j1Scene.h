@@ -37,10 +37,10 @@ public:
 	bool Save(pugi::xml_node&)const;
 
 	bool Load(pugi::xml_node&);
-
+	int current_lvl;
 private:
 	iPoint position;
-	int current_lvl;
+	
 };
 
 #endif // __j1SCENE_H__

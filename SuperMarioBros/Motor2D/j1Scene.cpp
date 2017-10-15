@@ -86,7 +86,15 @@ bool j1Scene::Update(float dt)
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
 		App->render->camera.x += -1;
 		
-	
+	if (App->player->position.x >= 3328)
+	{
+		if (current_lvl == 1)
+			LoadLvl(2, true);
+
+		else if (current_lvl == 2)
+			LoadLvl(1, true);
+	}
+
 	App->map->Draw();
 
 	// "Map:%dx%d Tiles:%dx%d Tilesets:%d"

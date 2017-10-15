@@ -8,7 +8,7 @@
 #include "p2List.h"
 #include "Animation.h"
 
-#define GRAVITY 0.1;
+#define GRAVITY 0.55;
 #define VELOCITY  0.65f
 #define ANIMATION_SPEED 0.045f;
 
@@ -61,10 +61,11 @@ private:
 	mario_stage stage;
 	float vector_x;
 	float vector_y;
-	
+	int frame_counter = 0;
 
 public:
 	fPoint position;
+	bool jumping=false;
 
 };
 
