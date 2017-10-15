@@ -8,6 +8,7 @@
 #include "p2List.h"
 #include "Animation.h"
 
+#define GRAVITY 0.1;
 #define VELOCITY  0.65f
 #define ANIMATION_SPEED 0.045f;
 

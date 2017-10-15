@@ -50,6 +50,8 @@ public:
 	void GoLoad();
 	void GoSaveAudio();
 	void GoLoadAudio();
+	void GoSavePlayer();
+	void GoLoadPlayer();
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
 
 private:
@@ -103,6 +105,8 @@ private:
 	bool go_to_load = false;
 	bool go_to_save_audio = false;
 	bool go_to_load_audio = false;
+	bool go_to_save_player = false;
+	bool go_to_load_player = false;
 
 	p2SString			load_game;
 	mutable p2SString	save_game;

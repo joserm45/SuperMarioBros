@@ -2,6 +2,7 @@
 #include "p2Log.h"
 #include "j1App.h"
 #include "Player.h"
+#include "j1App.h"
 #include "j1Input.h"
 #include "j1Textures.h"
 #include "j1Audio.h"
@@ -97,9 +98,10 @@ bool j1Player::Update(float dt)
 		stage = RIGHT;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_REPEAT)
 	{
-		position.y -= VELOCITY;
+		int gravedad = GRAVITY + dt;
+		position.y -= VELOCITY + gravedad;
 		stage = JUMP;
 
 		//max jump (if)

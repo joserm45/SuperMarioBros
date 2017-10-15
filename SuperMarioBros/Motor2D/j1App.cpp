@@ -301,6 +301,16 @@ void j1App::GoLoadAudio()
 	go_to_load_audio = true;
 }
 
+void j1App::GoSavePlayer()
+{
+	go_to_save_player = true;
+}
+
+void j1App::GoLoadPlayer()
+{
+	go_to_load_player = true;
+}
+
 // ---------------------------------------
 void j1App::GetSaveGames(p2List<p2SString>& list_to_fill) const
 {
@@ -322,6 +332,7 @@ void j1App::Load()
 	}
 	go_to_load = false;
 	go_to_load_audio = false;
+	go_to_load_player = false;
 }
 
 void j1App::Save() 
@@ -341,4 +352,5 @@ void j1App::Save()
 	document.save_file("save_game.xml");
 	go_to_save = false;
 	go_to_save_audio = false;
+	go_to_save_player = false;
 }

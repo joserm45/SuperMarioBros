@@ -31,7 +31,7 @@ bool j1Scene::Awake()
 bool j1Scene::Start()
 {
 	App->audio->PlayMusic("audio/music/lvl_1.ogg");
-	App->map->Load("lvl2.tmx");
+	App->map->Load("lvl1.tmx");
 
 	return true;
 }
@@ -61,12 +61,14 @@ bool j1Scene::Update(float dt)
 	{
 		App->audio->path_audio = "audio/music/lvl_1.ogg";
 		App->audio->PlayMusic("audio/music/lvl1.ogg");
+		App->map->Load("lvl2.tmx");
 	}
 
 
 	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
 	{
 		App->audio->path_audio = "audio/music/lvl_2.ogg";
+		App->map->Load("lvl2.tmx");
 		App->audio->PlayMusic("audio/music/lvl_2.ogg");
 	}
 
