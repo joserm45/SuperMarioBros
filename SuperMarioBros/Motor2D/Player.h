@@ -17,7 +17,7 @@ struct SDL_Texture;
 class j1Player : public j1Module
 {
 public:
-	enum mario_stage {IDLE, RIGHT,LEFT,JUMP};
+	enum mario_stage {IDLE, RIGHT,LEFT,JUMP,DIE};
 
 	j1Player();
 
@@ -66,7 +66,7 @@ private:
 public:
 	fPoint position;
 	bool jumping=false;
-
+	bool falling = false;
 };
 
 #endif // __PLAYER_H__

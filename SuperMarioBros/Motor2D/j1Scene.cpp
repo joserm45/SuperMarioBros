@@ -73,7 +73,7 @@ bool j1Scene::Update(float dt)
 	{
 		LoadLvl(2,true);
 	}
-
+/*
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y -= -1;
 
@@ -84,9 +84,9 @@ bool j1Scene::Update(float dt)
 		App->render->camera.x -= -1;
 
 	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->camera.x += -1;
+		App->render->camera.x += -1;*/
 		
-	if (App->player->position.x >= 3328)
+	if (App->player->position.x >= 3550)
 	{
 		if (current_lvl == 1)
 			LoadLvl(2, true);

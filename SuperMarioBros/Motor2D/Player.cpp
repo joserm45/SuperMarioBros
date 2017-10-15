@@ -33,10 +33,10 @@ j1Player::j1Player() : j1Module()
 	*/
 
 	//Walk left
-	//SDL_RendererFlip flip = SDL_FLIP_HORIZONTAL | SDL_FLIP_VERTICAL;
-
-	//SDL_RenderCopyEx(renderer, texture, &srcrect, &dstrect, angle, &center, flip);
-
+	move_left.PushBack({ 201,3,16,30 });
+	move_left.PushBack({ 184,2,14,31 });
+	move_left.PushBack({ 166,1,16,32 });
+	move_left.speed = ANIMATION_SPEED;
 	//Jump 
 	jump.PushBack({369,2,16,32});
 
@@ -101,7 +101,7 @@ bool j1Player::Update(float dt)
 		stage = RIGHT;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN )
 	{
 		moving = true;
 		jumping = true;
@@ -114,6 +114,7 @@ bool j1Player::Update(float dt)
 	{
 		vector_y -= VELOCITY * 1.5f;
 		frame_counter++;
+		stage = JUMP;
 		if (frame_counter > 120)
 		{
 			jumping = false;
@@ -127,8 +128,16 @@ bool j1Player::Update(float dt)
 	position.y += vector_y;
 	MoveCamera();
 
+	/*if (position.y > 220)
+	{
+		stage = DIE;
+		position.y += VELOCITY * 1.5;
+	}*/
+	
+
 	if (position.y > 240)
 	{
+		
 		App->scene->LoadLvl(App->scene->current_lvl, true);
 	}
 	
@@ -238,6 +247,11 @@ void j1Player::Draw()
 		case j1Player::JUMP:
 		{
 			sprite = &jump;
+			break;
+		}
+		case j1Player::DIE:
+		{
+			sprite = &die;
 			break;
 		}
 		default:
