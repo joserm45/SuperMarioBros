@@ -30,8 +30,9 @@ bool j1Scene::Awake()
 // Called before the first frame
 bool j1Scene::Start()
 {
-	App->map->Load("layer_mario.tmx");
-//	position.create()
+	App->audio->PlayMusic("audio/music/lvl_1.ogg");
+	App->map->Load("lvl2.tmx");
+
 	return true;
 }
 
@@ -44,11 +45,30 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	if(App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
-		App->LoadGame();
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
+	{
+		App->GoSave();
+		App->GoSaveAudio();
+	}
 
-	if(App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-		App->SaveGame();
+	if (App->input->GetKey(SDL_SCANCODE_F6) == KEY_DOWN)
+	{
+		App->GoLoad();
+		App->GoLoadAudio();
+	}
+
+	if (App->input->GetKey(SDL_SCANCODE_1) == KEY_DOWN)
+	{
+		App->audio->path_audio = "audio/music/lvl_1.ogg";
+		App->audio->PlayMusic("audio/music/lvl1.ogg");
+	}
+
+
+	if (App->input->GetKey(SDL_SCANCODE_2) == KEY_DOWN)
+	{
+		App->audio->path_audio = "audio/music/lvl_2.ogg";
+		App->audio->PlayMusic("audio/music/lvl_2.ogg");
+	}
 
 	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
 		App->render->camera.y -= -1;

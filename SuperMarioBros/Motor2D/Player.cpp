@@ -86,14 +86,14 @@ bool j1Player::Update(float dt)
 	if (App->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT)
 	{
 		position.x -= VELOCITY;
-		App->render->camera.x -= VELOCITY;
+		App->render->camera.x -= -0.1f;
 		stage = LEFT;
 	}
 
 	if (App->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT)
 	{
 		position.x += VELOCITY;
-		App->render->camera.x += -;
+		App->render->camera.x += -0.1f;
 		stage = RIGHT;
 	}
 

@@ -5,7 +5,7 @@
 #include "SDL_mixer\include\SDL_mixer.h"
 #include "p2List.h"
 
-#define DEFAULT_MUSIC_FADE_TIME 2.0f
+#define DEFAULT_MUSIC_FADE_TIME 1.0f
 
 struct _Mix_Music;
 struct Mix_Chunk;
@@ -34,6 +34,7 @@ public:
 	// Play a previously loaded WAV
 	bool PlayFx(unsigned int fx, int repeat = 0);
 
+	p2SString path_audio;
 private:
 
 	_Mix_Music*			music;

@@ -46,8 +46,10 @@ public:
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
 
-	void LoadGame();
-	void SaveGame() const;
+	void GoSave();
+	void GoLoad();
+	void GoSaveAudio();
+	void GoLoadAudio();
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
 
 private:
@@ -71,8 +73,8 @@ private:
 	bool PostUpdate();
 
 	// Load / Save
-	bool LoadGameNow();
-	bool SavegameNow() const;
+	void Save();
+	void Load();
 
 public:
 
@@ -97,8 +99,11 @@ private:
 	p2SString			title;
 	p2SString			organization;
 
-	mutable bool		want_to_save;
-	bool				want_to_load;
+	bool go_to_save = false;
+	bool go_to_load = false;
+	bool go_to_save_audio = false;
+	bool go_to_load_audio = false;
+
 	p2SString			load_game;
 	mutable p2SString	save_game;
 };
