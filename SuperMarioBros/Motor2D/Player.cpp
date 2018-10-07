@@ -14,6 +14,7 @@
 j1Player::j1Player() : j1Module()
 {
 	name.create("player");
+
 	//little mario
 	//sprite_idle = { 277,44,12,16 };
 
@@ -101,7 +102,7 @@ bool j1Player::Update(float dt)
 		stage = RIGHT;
 	}
 
-	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN )
+	if (App->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN && vector_y == 0)
 	{
 		moving = true;
 		jumping = true;
@@ -118,7 +119,17 @@ bool j1Player::Update(float dt)
 		if (frame_counter > 120)
 		{
 			jumping = false;
+			falling = true;
 			frame_counter = 0;
+		}
+	}
+	if (falling == true )
+	{
+		falling_count++;
+		if (falling_count > 110)
+		{
+			falling_count = 0; 
+			falling = false;
 		}
 	}
 
@@ -203,7 +214,7 @@ void j1Player::CheckCollisions()
 
 	if (App->map->map_data.tilesets[0]->GetTileCollision(tile_id))
 	{
-		vector_y = 0;
+  		vector_y = 0;
 	}
 
 

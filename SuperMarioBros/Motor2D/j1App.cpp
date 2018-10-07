@@ -348,6 +348,7 @@ void j1App::Save()
 		pugi::xml_node save_node;
 		save_node = root_node.append_child(modules[i]->name.GetString());
 		modules[i]->Save(save_node);
+		
 	}
 	document.save_file("save_game.xml");
 	go_to_save = false;

@@ -62,7 +62,7 @@ private:
 	float vector_x;
 	float vector_y;
 	int frame_counter = 0;
-
+	int falling_count = 0;
 public:
 	fPoint position;
 	bool jumping=false;

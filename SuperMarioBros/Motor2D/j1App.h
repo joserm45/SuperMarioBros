@@ -52,6 +52,7 @@ public:
 	void GoLoadAudio();
 	void GoSavePlayer();
 	void GoLoadPlayer();
+
 	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
 
 private:
